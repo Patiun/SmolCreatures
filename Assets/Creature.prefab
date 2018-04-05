@@ -291,8 +291,8 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 1
-  sight_range: 1.8
-  detection_range: 3.5
+  sight_range: 0.8
+  detection_range: 2.4
 --- !u!114 &114514920550721026
 MonoBehaviour:
   m_ObjectHideFlags: 1

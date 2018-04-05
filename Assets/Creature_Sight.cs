@@ -56,7 +56,7 @@ public class Creature_Sight : MonoBehaviour {
 
 	void OpenEyes() {
 		foreach(GameObject eye in eyes) {
-			eye.SetActive (false);
+			eye.SetActive (true);
 		}
 		eyes_open = true;
 	}

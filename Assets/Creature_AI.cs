@@ -9,18 +9,21 @@ public class Creature_AI : MonoBehaviour {
 
 	public int minWanderTime = 100;
 	public int maxWanderTime = 600;
-	public int curWanderTime = 0;
-	public int wanderCount = 0;
+	private int curWanderTime = 0;
+	private int wanderCount = 0;
 
 	public int minFleeTime = 10;
 	public int maxFleeTime = 60;
-	public int curFleeTime = 0;
-	public int fleeCount = 0;
+	private int curFleeTime = 0;
+	private int fleeCount = 0;
 
 	public int minSleepTime = 100;
 	public int maxSleepTime = 1000;
-	public int curSleepTime = 0;
-	public int sleepCount = 0;
+	private int curSleepTime = 0;
+	private int sleepCount = 0;
+
+	public int maxEnergy = 100;
+	public int curEnergy = 100;
 
 	private Creature_Movement cm;
 
@@ -47,7 +50,13 @@ public class Creature_AI : MonoBehaviour {
 			break;
 		case State.Fleeing:
 			if (fleeCount >= curFleeTime) {
-				Wander ();
+				if (curEnergy - curFleeTime <= 0) {
+					curEnergy = 0;
+					Sleep ();
+				} else { 
+					curEnergy -= curFleeTime;
+					Wander ();
+				}
 				fleeCount = 0;
 			} else {
 				fleeCount += 1;
@@ -55,6 +64,7 @@ public class Creature_AI : MonoBehaviour {
 			break;
 		case State.Asleep:
 			if (sleepCount >= curSleepTime) {
+				curEnergy = maxEnergy;
 				Wander ();
 				sleepCount = 0;
 			} else {
@@ -82,7 +92,7 @@ public class Creature_AI : MonoBehaviour {
 
 	public void Sleep() {
 		state = State.Asleep;
-		curFleeTime = Random.Range (minSleepTime, maxSleepTime);
+		curSleepTime = Random.Range (minSleepTime, maxSleepTime);
 		sleepCount = 0;
 	}
 

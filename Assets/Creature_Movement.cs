@@ -26,6 +26,9 @@ public class Creature_Movement : MonoBehaviour {
 		case Creature_AI.State.Fleeing:
 			Move (flee_scale);
 			break;
+		case Creature_AI.State.Asleep:
+			Stop ();
+			break;
 		default:
 			Stop ();
 			break;
