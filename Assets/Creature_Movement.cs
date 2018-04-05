@@ -5,6 +5,7 @@ using UnityEngine;
 public class Creature_Movement : MonoBehaviour {
 
 	public float walk_speed = 1.5f;
+	public float flee_scale = 2.0f;
 	public float turn_speed = 15f;
 
 	private Creature_AI ca;
@@ -18,19 +19,25 @@ public class Creature_Movement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (ca.GetState () == Creature_AI.State.Wandering) {
-			Move ();
-		} else {
+		switch (ca.GetState ()) {
+		case Creature_AI.State.Wandering:
+			Move (1.0f);
+			break;
+		case Creature_AI.State.Fleeing:
+			Move (flee_scale);
+			break;
+		default:
 			Stop ();
+			break;
 		}
 	}
 
-	public void Move() {
-		rb.velocity = transform.up * walk_speed;
+	public void Move(float scale) {
+		rb.velocity = transform.up * scale * walk_speed;
 	}
 
 	public void Stop() {
-		rb.velocity = Vector3.zero;
+		Move (0);
 	}
 
 	public void ChooseRandomDirection() {
@@ -39,7 +46,10 @@ public class Creature_Movement : MonoBehaviour {
 	}
 
 	public void TurnAwayFrom(Vector3 pos) {
-		transform.LookAt (pos);
 		transform.RotateAround (transform.position, transform.forward, 180);
+	}
+
+	public void Turn(int direction) { //-1 is left, 1 is right
+		transform.RotateAround (transform.position, transform.forward, direction*turn_speed);
 	}
 }
