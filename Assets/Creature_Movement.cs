@@ -11,6 +11,8 @@ public class Creature_Movement : MonoBehaviour {
 	private Creature_AI ca;
 	private Rigidbody rb;
 
+	private Vector3 targetLocation;
+
 	// Use this for initialization
 	void Start () {
 		ca = GetComponent<Creature_AI> ();
@@ -21,6 +23,10 @@ public class Creature_Movement : MonoBehaviour {
 	void Update () {
 		switch (ca.GetState ()) {
 		case Creature_AI.State.Wandering:
+			Move (1.0f);
+			break;
+		case Creature_AI.State.MovingTo:
+			GoTo (targetLocation);
 			Move (1.0f);
 			break;
 		case Creature_AI.State.Fleeing:
@@ -54,5 +60,11 @@ public class Creature_Movement : MonoBehaviour {
 
 	public void Turn(int direction) { //-1 is left, 1 is right
 		transform.RotateAround (transform.position, transform.forward, direction*turn_speed);
+	}
+
+	public void GoTo(Vector3 pos) {
+		targetLocation = pos;
+		float angle = Vector3.Angle (transform.up-transform.position, pos-transform.position);
+		transform.RotateAround (transform.position, transform.forward, angle);
 	}
 }

@@ -240,6 +240,8 @@ MonoBehaviour:
   creature_prefab: {fileID: 1428449993928352, guid: 24dc209da31316a44bb6324f612cd0ea,
     type: 2}
   creatures: []
+  sound_prefab: {fileID: 1875669917130882, guid: 55b74758e4128fd45a32bf6b7a4cdee7,
+    type: 2}
 --- !u!1 &546949300
 GameObject:
   m_ObjectHideFlags: 0

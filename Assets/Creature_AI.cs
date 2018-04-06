@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Creature_AI : MonoBehaviour {
 
-	public enum State {Wandering,Fleeing,Asleep};
+	public enum State {Wandering,Fleeing,Asleep,MovingTo};
 	public State state;
 
 	public int minWanderTime = 100;
@@ -24,6 +24,9 @@ public class Creature_AI : MonoBehaviour {
 
 	public int maxEnergy = 100;
 	public int curEnergy = 100;
+
+	public float distance = 0.3f;
+	public Vector3 goToTarget;
 
 	private Creature_Movement cm;
 
@@ -71,6 +74,12 @@ public class Creature_AI : MonoBehaviour {
 				sleepCount += 1;
 			}
 			break;
+		case State.MovingTo:
+			Debug.DrawRay (transform.position, goToTarget, Color.yellow);
+			if (Vector3.Distance(transform.position,goToTarget) <= distance) {
+				Wander();
+			}
+			break;
 		default:
 			Sleep ();
 			break;
@@ -96,6 +105,14 @@ public class Creature_AI : MonoBehaviour {
 		sleepCount = 0;
 	}
 
+	public void MoveTo(Vector3 target) {
+		if (state == State.Wandering || state == State.MovingTo) {
+			state = State.MovingTo;
+			goToTarget = new Vector3(target.x,target.y,target.z);
+			cm.GoTo (target);
+		}
+	}
+
 	public void ContactWith(GameObject obj){
 		switch (obj.tag) {
 		case "Creature":
@@ -111,9 +128,14 @@ public class Creature_AI : MonoBehaviour {
 	public void See(GameObject obj,int eye_id = 0) {
 		switch (obj.tag) {
 		case "Creature":
-			cm.TurnAwayFrom (obj.transform.position);
-			Flee ();
-			break;
+			if (obj.GetComponent<Creature_AI> ().GetState () != State.Asleep) {
+				cm.TurnAwayFrom (obj.transform.position);
+				Flee ();
+				break;
+			} else {
+				cm.Turn (eye_id * 2 - 1);
+				break;
+			}
 		default:
 			cm.Turn (eye_id*2-1);
 			break;
